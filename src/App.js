@@ -1,50 +1,73 @@
-import React, { Component } from "react"
-import logo from "./logo.svg"
-import "./App.css"
+import React, {useEffect, useState} from 'react';
+import axios from './axios.js';
+import './App.css';
+import Video from './Video.js';
+import myVideo1 from "./pexels-tima-miroshnichenko-6498520.mp4"
+import myVideo2 from "./pexels-c-technical-6153725.mp4"
+import myVideo3 from "./pexels-mikhail-nilov-8239190.mp4"
 
-class LambdaDemo extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { loading: false, msg: null }
-  }
+function App() {
+  // Axios({
+  //   method: "GET",
+  //   url: "http://localhost:9000/v2/posts",
+  //   headers: {
+  //     "Content-Type": "application/json"
+  //   }
+  // }).then(res => {
+  //   console.log(res.data);
+  // });
 
-  handleClick = api => e => {
-    e.preventDefault()
+  const [videos, setVideos] = useState([])
 
-    this.setState({ loading: true })
-    fetch("/.netlify/functions/" + api)
-      .then(response => response.json())
-      .then(json => this.setState({ loading: false, msg: json.msg }))
-  }
+  useEffect(() => {
+    async function fetchPosts(){
+      const response = await axios.get('/v2/posts')
+      setVideos(response.data)
 
-  render() {
-    const { loading, msg } = this.state
+      return response
+    }
+   
+    fetchPosts()
+  }, [])
 
-    return (
-      <p>
-        <button onClick={this.handleClick("hello")}>{loading ? "Loading..." : "Call Lambda"}</button>
-        <button onClick={this.handleClick("async-dadjoke")}>{loading ? "Loading..." : "Call Async Lambda"}</button>
-        <br />
-        <span>{msg}</span>
-      </p>
-    )
-  }
-}
+  console.log(videos)
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <LambdaDemo />
-        </header>
+  return (
+    //BEM Naming convention
+    <div className="app">
+   
+    
+      <div className="app_videos">
+
+            <Video
+            url= {myVideo1}
+            channel= "jonesmichael"
+            description= "Musa travels through parrell universes to find his captured father..."
+            movieTitle= "Cyba Brotha"
+            likes= "4623"
+
+          />
+            <Video
+            url= {myVideo2}
+            channel= "mrrobodude"
+            description= "When the Order of Robots dynasty took over the world, one robot decided to not fall in line..."
+            movieTitle= "Robotic Rebel"
+            likes= "3326"
+
+          />
+            <Video
+            url= {myVideo3}
+            channel= "innov8"
+            description= "In a world where drones are only issued for goverment use to monitor civilians Khadijja builds one on her own... "
+            movieTitle= "Similar"
+            likes="6892"
+          />
+
       </div>
-    )
-  }
+      
+    </div>
+  );
 }
 
-export default App
+export default App;
+ 
